@@ -6,7 +6,7 @@
 /*   By: hyunkyle <hyunkyle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 14:09:40 by hyunkyle          #+#    #+#             */
-/*   Updated: 2022/08/03 15:51:32 by hyunkyle         ###   ########.fr       */
+/*   Updated: 2022/08/04 13:02:22 by hyunkyle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ void	execute1(char **comm)
 	}
 }
 
-void	child_logic(t_data *arg_data, int n)
+void	child_logic(t_data *arg_data, int n, int finish_flag, int fd_pipe[2])
 {
 	char	**comm;
 
+	if (!finish_flag)
+		close(fd_pipe[READ]);
 	comm = ft_split(arg_data->argv[n], ' ');
 	if (ft_strchr(comm[0], '/') > 0)
 	{
@@ -67,8 +69,8 @@ void	recursive_pipe(int fd_read, t_data *arg_data, int n, int bonus_flag)
 			print_error();
 		}
 	}
-	else
-		child_logic(arg_data, n);
+	else if (fd_read != -1 && pid == 0)
+		child_logic(arg_data, n, finish_flag, fd_pipe);
 }
 
 void	here_doc_start(char *finish_flag, t_data *arg_data)
@@ -95,8 +97,7 @@ void	here_doc_start(char *finish_flag, t_data *arg_data)
 		write(fd, buffer, buffer_size);
 	}
 	close(fd);
-	fd = open_infile("tmp.txt", arg_data);
-	recursive_pipe(fd, arg_data, 3, 1);
+	open_infile("tmp.txt", arg_data, 1);
 	free(arg_data);
 }
 
@@ -119,9 +120,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	else
 	{
-		read_fd = open_infile(argv[1], arg_data);
-		if (read_fd > 0)
-			recursive_pipe(read_fd, arg_data, 2, 0);
+		open_infile(argv[1], arg_data, 0);
 		free(arg_data);
 	}
 	return (0);

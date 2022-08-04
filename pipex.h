@@ -6,7 +6,7 @@
 /*   By: hyunkyle <hyunkyle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:05:18 by hyunkyle          #+#    #+#             */
-/*   Updated: 2022/08/03 15:58:03 by hyunkyle         ###   ########.fr       */
+/*   Updated: 2022/08/04 13:02:03 by hyunkyle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ struct s_arg_data
 };
 
 void	ft_putstr_fd(char *s, int fd);
-int		open_infile(char *infile, t_data *arg_data);
+void	open_infile(char *infile, t_data *arg_data, int bonus_flag);
 void	print_error(void);
 void	conn_pipe(int fd_pipe[], t_data *arg_data);
 pid_t	exe_fork(t_data *arg_data);

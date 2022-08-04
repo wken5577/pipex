@@ -6,7 +6,7 @@
 /*   By: hyunkyle <hyunkyle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 14:09:42 by hyunkyle          #+#    #+#             */
-/*   Updated: 2022/08/03 19:26:17 by hyunkyle         ###   ########.fr       */
+/*   Updated: 2022/08/04 13:01:56 by hyunkyle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "pipex.h"
 #include <stdio.h>
 
-int	open_infile(char *infile, t_data *arg_data)
+void	open_infile(char *infile, t_data *arg_data, int bonus_flag)
 {
 	int	fd;
 
@@ -23,17 +23,15 @@ int	open_infile(char *infile, t_data *arg_data)
 	if (fd < 0)
 	{
 		perror("zsh");
-		recursive_pipe(STD_IN, arg_data, 2, 0);
-		return (-1);
 	}
-	return (fd);
+	recursive_pipe(fd, arg_data, 2 + bonus_flag, bonus_flag);
 }
 
 void	dup2_read(int fd_read, t_data *arg_data)
 {
 	int	status;
 
-	if (fd_read == STD_IN)
+	if (fd_read == -1)
 		return ;
 	status = dup2(fd_read, STD_IN);
 	if (status < 0)
